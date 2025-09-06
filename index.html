@@ -11,4 +11,29 @@
         <p>Bitte wähle deinen Namen:</p>
         <div class="users">
             <button onclick="login('Barutti')">Barutti</button>
-            <button onclick="login('
+            <button onclick="login('Apoyo')">Apoyo</button>
+            <button onclick="login('Tintin')">Tintin</button>
+            <button onclick="login('Cooper')">Cooper</button>
+            <button onclick="login('Lilo')">Lilo</button>
+            <button onclick="login('Remy')">Remy</button>
+        </div>
+    </div>
+
+    <script>
+        function login(user) {
+            localStorage.setItem('currentUser', user);
+
+            // Default Coins für alle Nutzer
+            const users = ['Barutti','Apoyo','Tintin','Cooper','Lilo','Remy'];
+            users.forEach(u => {
+                if (!localStorage.getItem(u + '_coins')) localStorage.setItem(u + '_coins', 0);
+                if (!localStorage.getItem(u + '_tasks')) localStorage.setItem(u + '_tasks', JSON.stringify([]));
+                if (!localStorage.getItem(u + '_lastSpin')) localStorage.setItem(u + '_lastSpin', '0');
+                if (!localStorage.getItem(u + '_cart')) localStorage.setItem(u + '_cart', JSON.stringify([]));
+            });
+
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
