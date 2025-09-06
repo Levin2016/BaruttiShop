@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Barutti Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Barutti Dashboard</h1>
+        <div id="userCoins">Coins: 0</div>
+    </header>
+
+    <main>
+        <section id="tasks">
+            <h2>Aufgaben</h2>
+            <ul>
+                <li>
+                    Mache für Barutti ein Ämpli - <strong>2 Coins</strong>
+                    <button onclick="completeTask(this, 2)">✔</button>
+                </li>
+                <li>
+                    Räume dein Zimmer auf - <strong>3 Coins</strong>
+                    <button onclick="completeTask(this, 3)">✔</button>
+                </li>
+            </ul>
+        </section>
+
+        <section id="wheel">
+            <h2>Glücksrad</h2>
+            <canvas id="spinWheel" width="300" height="300"></canvas>
+            <button onclick="spinWheel()">Drehen!</button>
+        </section>
+
+        <section id="lottery">
+            <h2>Verlosung</h2>
+            <div id="lotteryCountdown">Countdown: </div>
+            <button onclick="buyTicket()">Los kaufen (10 Coins)</button>
+            <div id="lotteryTickets">Verfügbare Lose: 13</div>
+        </section>
+
+        <section id="shop">
+            <h2>Shop</h2>
+            <ul>
+                <li>
+                    Kuscheltier - 5 Coins
+                    <button onclick="addToCart('Kuscheltier', 5)">In den Warenkorb</button>
+                </li>
+                <li>
+                    Aufkleber - 2 Coins
+                    <button onclick="addToCart('Aufkleber', 2)">In den Warenkorb</button>
+                </li>
+            </ul>
+            <button onclick="checkout()">Zur Kasse</button>
+        </section>
+    </main>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
