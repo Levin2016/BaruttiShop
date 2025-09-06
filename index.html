@@ -1,43 +1,31 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>BaruttiShop - Startseite</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Barutti Familie</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>BaruttiShop</h1>
-    <nav>
-      <a href="index.html">Startseite</a>
-      <a href="shop.html">Shop</a>
-      <a href="gluecksrad.html">Glücksrad</a>
-      <a href="lose.html">Lose</a>
-      <a href="konto.html">Mein Konto</a>
-      <a href="mitglieder.html">Mitglieder</a>
-    </nav>
-  </header>
-  <main>
-    <h2>Willkommen, Familie!</h2>
-    <form>
-      <label for="mitglied">Wer bist du?</label>
-      <select id="mitglied">
-        <option>Cooper</option>
-        <option>Apoyo</option>
-        <option>Lilo</option>
-        <option>Tintin</option>
-        <option>Remy</option>
-      </select>
-      <button type="button" onclick="auswaehlen()">Weiter</button>
-    </form>
-    <p id="begruesung"></p>
+    <div class="login-container">
+        <h1>Willkommen bei BaruttiShop!</h1>
+        <p>Wer bist du?</p>
+        <div class="users">
+            <button onclick="login('Apoyo')">Apoyo</button>
+            <button onclick="login('Tintin')">Tintin</button>
+            <button onclick="login('Cooper')">Cooper</button>
+            <button onclick="login('Lilo')">Lilo</button>
+            <button onclick="login('Remy')">Remy</button>
+        </div>
+    </div>
+
     <script>
-      function auswaehlen() {
-        var name = document.getElementById('mitglied').value;
-        document.getElementById('begruesung').textContent =
-          "Hallo " + name + "! Dein aktuelles Guthaben: 100 Barutti Coins";
-      }
+        function login(user) {
+            localStorage.setItem('currentUser', user);
+            if (!localStorage.getItem(user + '_coins')) {
+                localStorage.setItem(user + '_coins', 0);
+            }
+            window.location.href = 'dashboard.html';
+        }
     </script>
-  </main>
 </body>
 </html>
