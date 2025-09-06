@@ -1,3 +1,4 @@
+<script src="dashboard.js"></script>
 const user = localStorage.getItem('currentUser');
 const coinsDisplay = document.getElementById('userCoins');
 let coins = parseInt(localStorage.getItem(user + '_coins')) || 0;
@@ -65,3 +66,4 @@ function buyTicket() {
         alert('Nicht genug Coins!');
     }
 }
+<script src="dashboard.js"></script>
