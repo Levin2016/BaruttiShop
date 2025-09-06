@@ -8,7 +8,7 @@
 <body>
     <div class="login-container">
         <h1>Willkommen bei Barutti!</h1>
-        <p>Wer bist du?</p>
+        <p>Bitte wähle deinen Namen:</p>
         <div class="users">
             <button onclick="login('Apoyo')">Apoyo</button>
             <button onclick="login('Tintin')">Tintin</button>
@@ -20,8 +20,20 @@
 
     <script>
         function login(user) {
-            localStorage.setItem('currentUser', user);
-            if (!localStorage.getItem(user + '_coins')) localStorage.setItem(user + '_coins', 0);
-            if (!localStorage.getItem(user + '_tasks')) localStorage.setItem(user + '_tasks', JSON.stringify([]));
-            if (!localStorage.getItem(user + '_cart')) localStorage.setItem(user + '_cart', JSON.stringify([]));
-            if (!localStorage.getItem(user + '_lotteryTickets')) localStorage.setItem(u_
+            try {
+                localStorage.setItem('currentUser', user);
+
+                if (!localStorage.getItem(user + '_coins')) localStorage.setItem(user + '_coins', 0);
+                if (!localStorage.getItem(user + '_tasks')) localStorage.setItem(user + '_tasks', JSON.stringify([]));
+                if (!localStorage.getItem(user + '_cart')) localStorage.setItem(user + '_cart', JSON.stringify([]));
+                if (!localStorage.getItem(user + '_lotteryTickets')) localStorage.setItem(user + '_lotteryTickets', '0');
+
+                // Weiterleitung zum Dashboard
+                window.location.href = 'dashboard.html';
+            } catch (e) {
+                alert('Fehler beim Login: ' + e);
+            }
+        }
+    </script>
+</body>
+</html>
