@@ -1,9 +1,9 @@
-<script src="dashboard.js"></script>
 const user = localStorage.getItem('currentUser');
 const coinsDisplay = document.getElementById('userCoins');
 let coins = parseInt(localStorage.getItem(user + '_coins')) || 0;
 coinsDisplay.textContent = 'Coins: ' + coins;
 
+// Aufgaben
 function completeTask(button, reward, taskName) {
     let completedTasks = JSON.parse(localStorage.getItem(user + '_tasks')) || [];
     if (!completedTasks.includes(taskName)) {
@@ -18,7 +18,7 @@ function completeTask(button, reward, taskName) {
     }
 }
 
-// Einfaches Glücksrad mit Animation
+// Einfaches Glücksrad
 function spinWheel() {
     const maxCoins = 10;
     const win = Math.floor(Math.random() * (maxCoins + 1));
@@ -66,4 +66,3 @@ function buyTicket() {
         alert('Nicht genug Coins!');
     }
 }
-<script src="dashboard.js"></script>
