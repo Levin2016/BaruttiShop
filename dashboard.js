@@ -3,25 +3,40 @@ const coinsDisplay = document.getElementById('userCoins');
 let coins = parseInt(localStorage.getItem(user + '_coins')) || 0;
 coinsDisplay.textContent = 'Coins: ' + coins;
 
-function completeTask(button, reward) {
-    coins += reward;
-    coinsDisplay.textContent = 'Coins: ' + coins;
-    localStorage.setItem(user + '_coins', coins);
-    button.disabled = true;
+function completeTask(button, reward, taskName) {
+    let completedTasks = JSON.parse(localStorage.getItem(user + '_tasks')) || [];
+    if (!completedTasks.includes(taskName)) {
+        coins += reward;
+        coinsDisplay.textContent = 'Coins: ' + coins;
+        localStorage.setItem(user + '_coins', coins);
+        completedTasks.push(taskName);
+        localStorage.setItem(user + '_tasks', JSON.stringify(completedTasks));
+        button.disabled = true;
+    } else {
+        alert('Aufgabe bereits erledigt!');
+    }
 }
 
+// Einfaches Glücksrad mit Animation
+function spinWheel() {
+    const maxCoins = 10;
+    const win = Math.floor(Math.random() * (maxCoins + 1));
+    alert('Du hast ' + win + ' Coins gewonnen!');
+    coins += win;
+    coinsDisplay.textContent = 'Coins: ' + coins;
+    localStorage.setItem(user + '_coins', coins);
+}
+
+// Shop
 function addToCart(item, price) {
-    if (!localStorage.getItem(user + '_cart')) {
-        localStorage.setItem(user + '_cart', JSON.stringify([]));
-    }
-    let cart = JSON.parse(localStorage.getItem(user + '_cart'));
+    let cart = JSON.parse(localStorage.getItem(user + '_cart') || '[]');
     cart.push({item, price});
     localStorage.setItem(user + '_cart', JSON.stringify(cart));
     alert(item + ' zum Warenkorb hinzugefügt!');
 }
 
 function checkout() {
-    let cart = JSON.parse(localStorage.getItem(user + '_cart')) || [];
+    let cart = JSON.parse(localStorage.getItem(user + '_cart') || '[]');
     let total = cart.reduce((sum, i) => sum + i.price, 0);
     if (coins >= total) {
         coins -= total;
@@ -32,15 +47,6 @@ function checkout() {
     } else {
         alert('Nicht genug Coins!');
     }
-}
-
-// Einfaches Glücksrad
-function spinWheel() {
-    let win = Math.floor(Math.random() * 11); // 0-10 Coins
-    alert('Du hast ' + win + ' Coins gewonnen!');
-    coins += win;
-    coinsDisplay.textContent = 'Coins: ' + coins;
-    localStorage.setItem(user + '_coins', coins);
 }
 
 // Verlosung
