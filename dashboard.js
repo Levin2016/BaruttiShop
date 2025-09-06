@@ -1,3 +1,4 @@
+// Nutzer & Coins
 const user = localStorage.getItem('currentUser');
 const coinsDisplay = document.getElementById('userCoins');
 let coins = parseInt(localStorage.getItem(user + '_coins')) || 0;
@@ -18,7 +19,7 @@ function completeTask(button, reward, taskName) {
     }
 }
 
-// Einfaches Glücksrad
+// Glücksrad
 function spinWheel() {
     const maxCoins = 10;
     const win = Math.floor(Math.random() * (maxCoins + 1));
