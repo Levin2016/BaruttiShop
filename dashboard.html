@@ -8,21 +8,14 @@
 <body>
     <header>
         <h1>Barutti Dashboard</h1>
-        <div id="userCoins">Coins: 0</div>
+        <div id="userInfo">Eingeloggt als: <span id="userName"></span> | Coins: <span id="userCoins"></span></div>
     </header>
 
     <main>
-        <!-- Aufgabenbereich -->
+        <!-- Aufgaben -->
         <section id="tasks">
             <h2>Aufgaben</h2>
-            <ul>
-                <li>Mache für Barutti ein Ämpli - <strong>2 Coins</strong>
-                    <button onclick="completeTask(this, 2, 'Ämpli')">✔</button>
-                </li>
-                <li>Räume dein Zimmer auf - <strong>3 Coins</strong>
-                    <button onclick="completeTask(this, 3, 'Zimmer')">✔</button>
-                </li>
-            </ul>
+            <ul id="tasksList"></ul>
         </section>
 
         <!-- Glücksrad -->
