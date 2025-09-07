@@ -1,130 +1,142 @@
-const currentUser = localStorage.getItem('currentUser');
-document.getElementById('userName').textContent = currentUser;
+const currentUser = localStorage.getItem("currentUser");
+document.getElementById("userName").textContent = currentUser;
 
-let coins = parseInt(localStorage.getItem(currentUser + '_coins')) || 0;
-document.getElementById('userCoins').textContent = coins;
+function getCoins(user){
+  return parseInt(localStorage.getItem(user+"_coins") || "0");
+}
+function setCoins(user, val){
+  localStorage.setItem(user+"_coins", val);
+}
 
-// Aufgabenliste
-const tasksData = [
-    {name: 'Mache ein Ämpli', reward: 2},
-    {name: 'Räume dein Zimmer auf', reward: 3}
-];
+function render(){
+  const content = document.getElementById("content");
+  content.innerHTML = "";
 
-function renderTasks() {
-    const tasksList = document.getElementById('tasksList');
-    tasksList.innerHTML = '';
-    tasksData.forEach(task => {
-        const li = document.createElement('li');
-        li.textContent = `${task.name} - ${task.reward} Coins `;
-        const btn = document.createElement('button');
-        btn.textContent = '✔';
-        btn.onclick = () => completeTask(task);
-        li.appendChild(btn);
-        tasksList.appendChild(li);
+  if(currentUser === "Barutti"){
+    renderAdmin(content);
+  } else {
+    renderPlayer(content);
+  }
+}
+
+// ---------------- Spieler-Dashboard ----------------
+function renderPlayer(content){
+  let coins = getCoins(currentUser);
+  document.getElementById("userCoins").textContent = coins;
+
+  // Aufgaben
+  const tasks = ["Zimmer aufräumen (2 Coins)","Tisch decken (3 Coins)","Hausaufgaben (5 Coins)","Hund füttern (4 Coins)"];
+  const secTasks = document.createElement("section");
+  secTasks.innerHTML = "<h2>Deine Aufgaben</h2><p>Wenn du fertig bist, sag es Barutti!</p><ul></ul>";
+  const ul = secTasks.querySelector("ul");
+  tasks.forEach(t=>{
+    let li=document.createElement("li");
+    li.textContent=t;
+    ul.appendChild(li);
+  });
+  content.appendChild(secTasks);
+
+  // Glücksrad
+  const secWheel = document.createElement("section");
+  secWheel.innerHTML="<h2>Glücksrad</h2>";
+  const canvas=document.createElement("canvas");
+  canvas.width=300; canvas.height=300; canvas.id="wheelCanvas";
+  secWheel.appendChild(canvas);
+  const btn=document.createElement("button");
+  btn.textContent="Drehen!";
+  btn.onclick=()=>spinWheel(currentUser);
+  secWheel.appendChild(btn);
+  content.appendChild(secWheel);
+
+  drawWheel("wheelCanvas");
+}
+
+// ---------------- Admin-Dashboard ----------------
+function renderAdmin(content){
+  const users=["Apoyo","Tintin","Cooper","Lilo","Remy"];
+  const tasks = ["Zimmer aufräumen (2 Coins)","Tisch decken (3 Coins)","Hausaufgaben (5 Coins)","Hund füttern (4 Coins)"];
+  users.forEach(user=>{
+    const sec=document.createElement("section");
+    sec.innerHTML=`<h3>${user} – Coins: <span>${getCoins(user)}</span></h3><ul></ul>`;
+    const ul=sec.querySelector("ul");
+    const done=JSON.parse(localStorage.getItem(user+"_tasks"));
+    tasks.forEach((t,i)=>{
+      const li=document.createElement("li");
+      const chk=document.createElement("input");
+      chk.type="checkbox"; chk.checked=done[i];
+      chk.onchange=()=>{
+        done[i]=chk.checked;
+        localStorage.setItem(user+"_tasks", JSON.stringify(done));
+        if(chk.checked){
+          let reward=[2,3,5,4][i];
+          let c=getCoins(user)+reward;
+          setCoins(user,c);
+          sec.querySelector("span").textContent=c;
+        }
+      };
+      li.appendChild(chk);
+      li.appendChild(document.createTextNode(" "+t));
+      ul.appendChild(li);
     });
+    content.appendChild(sec);
+  });
 }
-renderTasks();
 
-// Aufgabe erledigen
-function completeTask(task) {
-    if(currentUser === 'Barutti') {
-        // Admin kann Aufgaben für alle abhandeln
-        const users = ['Apoyo','Tintin','Cooper','Lilo','Remy'];
-        users.forEach(u=>{
-            let userTasks = JSON.parse(localStorage.getItem(u+'_tasks')||'[]');
-            if(!userTasks.includes(task.name)){
-                userTasks.push(task.name);
-                let userCoins = parseInt(localStorage.getItem(u+'_coins')||0);
-                userCoins += task.reward;
-                localStorage.setItem(u+'_coins', userCoins);
-                localStorage.setItem(u+'_tasks', JSON.stringify(userTasks));
-            }
-        });
-        alert(`Aufgabe "${task.name}" für alle erledigt!`);
-    } else {
-        let userTasks = JSON.parse(localStorage.getItem(currentUser+'_tasks')||'[]');
-        if(!userTasks.includes(task.name)){
-            userTasks.push(task.name);
-            coins += task.reward;
-            localStorage.setItem(currentUser+'_coins', coins);
-            localStorage.setItem(currentUser+'_tasks', JSON.stringify(userTasks));
-            document.getElementById('userCoins').textContent = coins;
-            alert(`Aufgabe "${task.name}" erledigt!`);
-        } else {
-            alert('Aufgabe bereits erledigt!');
-        }
+// ---------------- Glücksrad-Logik ----------------
+function drawWheel(id){
+  const canvas=document.getElementById(id);
+  const ctx=canvas.getContext("2d");
+  const colors=["#f44336","#2196f3","#ffeb3b","#4caf50","#9c27b0","#ff9800","#00bcd4","#e91e63"];
+  const seg=colors.length;
+  const angle=2*Math.PI/seg;
+  for(let i=0;i<seg;i++){
+    ctx.beginPath();
+    ctx.moveTo(150,150);
+    ctx.arc(150,150,140,i*angle,(i+1)*angle);
+    ctx.fillStyle=colors[i];
+    ctx.fill();
+    ctx.stroke();
+    ctx.save();
+    ctx.translate(150,150);
+    ctx.rotate(i*angle+angle/2);
+    ctx.fillStyle="#000";
+    ctx.fillText(i+"",90,5);
+    ctx.restore();
+  }
+}
+
+function spinWheel(user){
+  const lastSpin=parseInt(localStorage.getItem(user+"_lastSpin"));
+  const now=Date.now();
+  if(now-lastSpin<7*24*3600*1000){
+    alert("Nur 1x pro Woche drehen!");
+    return;
+  }
+  localStorage.setItem(user+"_lastSpin", now);
+
+  const canvas=document.getElementById("wheelCanvas");
+  const ctx=canvas.getContext("2d");
+  let rotation=0, speed=0.3+Math.random()*0.2;
+  const spin=setInterval(()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.save();
+    ctx.translate(150,150);
+    ctx.rotate(rotation);
+    ctx.translate(-150,-150);
+    drawWheel("wheelCanvas");
+    ctx.restore();
+    rotation+=speed;
+    speed*=0.97;
+    if(speed<0.01){
+      clearInterval(spin);
+      const seg=Math.floor(((rotation%(2*Math.PI))/(2*Math.PI))*8);
+      const reward=seg+1; // 1–8 Coins
+      let coins=getCoins(user)+reward;
+      setCoins(user,coins);
+      document.getElementById("userCoins").textContent=coins;
+      alert("Gewonnen: "+reward+" Coins!");
     }
+  },30);
 }
 
-// Glücksrad
-const wheel = document.getElementById('spinWheel');
-const ctx = wheel.getContext('2d');
-const segments = 10;
-const anglePerSegment = 2*Math.PI/segments;
-let spinning = false;
-
-function drawWheel(rotation=0) {
-    ctx.clearRect(0,0,wheel.width,wheel.height);
-    for(let i=0;i<segments;i++){
-        ctx.beginPath();
-        ctx.moveTo(150,150);
-        ctx.arc(150,150,140, i*anglePerSegment + rotation, (i+1)*anglePerSegment + rotation);
-        ctx.fillStyle = i%2===0 ? '#ff9999':'#99ccff';
-        ctx.fill();
-        ctx.stroke();
-    }
-}
-drawWheel();
-
-function spinWheel() {
-    if(currentUser !== 'Barutti'){
-        const lastSpin = parseInt(localStorage.getItem(currentUser+'_lastSpin')) || 0;
-        const now = Date.now();
-        if(now - lastSpin < 7*24*3600*1000){
-            alert('Du kannst nur einmal pro Woche drehen!');
-            return;
-        }
-        localStorage.setItem(currentUser+'_lastSpin', now);
-    }
-
-    if(spinning) return;
-    spinning = true;
-    let rotation = 0;
-    let speed = Math.random()*0.3+0.3;
-    const spins = setInterval(()=>{
-        rotation += speed;
-        speed *= 0.97;
-        drawWheel(rotation);
-        if(speed <0.01){
-            clearInterval(spins);
-            const segment = Math.floor((rotation%(2*Math.PI))/anglePerSegment);
-            const reward = segment; // Coins 0-9
-            coins += reward;
-            localStorage.setItem(currentUser+'_coins', coins);
-            document.getElementById('userCoins').textContent = coins;
-            alert(`Du hast ${reward} Coins gewonnen!`);
-            spinning = false;
-        }
-    },30);
-}
-
-// Shop
-function addToCart(item, price){
-    let cart = JSON.parse(localStorage.getItem(currentUser+'_cart')||'[]');
-    cart.push({item, price});
-    localStorage.setItem(currentUser+'_cart', JSON.stringify(cart));
-    alert(item+' zum Warenkorb hinzugefügt!');
-}
-
-function checkout(){
-    let cart = JSON.parse(localStorage.getItem(currentUser+'_cart')||'[]');
-    let total = cart.reduce((sum,i)=>sum+i.price,0);
-    if(coins>=total){
-        coins -= total;
-        localStorage.setItem(currentUser+'_coins', coins);
-        document.getElementById('userCoins').textContent = coins;
-        localStorage.setItem(currentUser+'_cart', JSON.stringify([]));
-        alert('Einkauf abgeschlossen!');
-    }else{
-        alert('Nicht genug Coins!');
-   
+render();
