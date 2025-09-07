@@ -1,38 +1,44 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(135deg, #ece9e6, #ffffff);
   margin: 0;
   padding: 0;
+  color: #333;
 }
 
 header {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
-  background: #333;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #4cafef;
   color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 section {
   background: white;
-  margin: 1rem;
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  border-radius: 15px;
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 button {
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 1.5rem;
   border: none;
-  background: #2196f3;
+  background: #4cafef;
   color: white;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+  transition: 0.2s ease;
 }
-
-button:disabled {
-  background: gray;
-  cursor: not-allowed;
+button:hover {
+  background: #3793d6;
 }
 
 canvas {
@@ -43,8 +49,8 @@ canvas {
 #wheelPointer {
   width: 0;
   height: 0;
+  border-top: 30px solid red; /* Pfeil nach innen */
   border-left: 20px solid transparent;
   border-right: 20px solid transparent;
-  border-bottom: 30px solid red;
   margin: 0 auto;
 }
