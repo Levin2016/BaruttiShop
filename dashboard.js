@@ -1,61 +1,62 @@
+// -------- Nutzer laden --------
 const currentUser = localStorage.getItem("currentUser");
 document.getElementById("userName").textContent = currentUser;
 
-// Coins holen und setzen
-function getCoins(user){
-  return parseInt(localStorage.getItem(user+"_coins") || "0");
-}
-function setCoins(user, val){
-  localStorage.setItem(user+"_coins", val);
-}
+// Coins resetten falls nicht vorhanden
+function getCoins(user){ return parseFloat(localStorage.getItem(user+"_coins") || "0"); }
+function setCoins(user,val){ localStorage.setItem(user+"_coins", val); }
 
-// Aufgabenliste
-const tasks = [
+// alle Spieler
+const players=["Apoyo","Tintin","Cooper","Lilo","Remy"];
+const allUsers=[...players,"Barutti"];
+
+// Reset wenn noch nie gesetzt
+allUsers.forEach(u=>{
+  if(localStorage.getItem(u+"_coins")===null){ setCoins(u,0); }
+});
+
+// Aufgaben
+const tasks=[
   {text:"Zimmer aufräumen", reward:2},
   {text:"Tisch decken", reward:3},
   {text:"Hausaufgaben machen", reward:5},
   {text:"Hund füttern", reward:4}
 ];
 
-// Lottery vorbereiten
+// -------- Lottery vorbereiten --------
 if(!localStorage.getItem("lottery_end")){
-  const end = Date.now() + 14*24*3600*1000;
-  localStorage.setItem("lottery_end", end);
-  localStorage.setItem("lottery_tickets", JSON.stringify([]));
+  const end=Date.now()+14*24*3600*1000;
+  localStorage.setItem("lottery_end",end);
+  localStorage.setItem("lottery_tickets",JSON.stringify([]));
 }
 
 function render(){
-  const content = document.getElementById("content");
-  content.innerHTML = "";
+  const content=document.getElementById("content");
+  content.innerHTML="";
 
-  if(currentUser === "Barutti"){
-    renderAdmin(content);
-  } else {
-    renderPlayer(content);
-  }
+  if(currentUser==="Barutti"){ renderAdmin(content); }
+  else { renderPlayer(content); }
 }
 
-// ---------------- Spieler-Dashboard ----------------
+// -------- Spieler-Dashboard --------
 function renderPlayer(content){
-  let coins = getCoins(currentUser);
-  document.getElementById("userCoins").textContent = coins;
+  document.getElementById("userCoins").textContent=getCoins(currentUser);
 
   // Aufgaben
-  const secTasks = document.createElement("section");
-  secTasks.innerHTML = "<h2>Deine Aufgaben</h2><p>Wenn du fertig bist, sag es Barutti!</p><ul></ul>";
-  const ul = secTasks.querySelector("ul");
+  const secTasks=document.createElement("section");
+  secTasks.innerHTML="<h2>Deine Aufgaben</h2><p>Wenn du fertig bist, sag es Barutti!</p><ul></ul>";
   tasks.forEach(t=>{
-    let li=document.createElement("li");
-    li.textContent = `${t.text} (${t.reward} Coins)`;
-    ul.appendChild(li);
+    const li=document.createElement("li");
+    li.textContent=`${t.text} (${t.reward} Coins)`;
+    secTasks.querySelector("ul").appendChild(li);
   });
   content.appendChild(secTasks);
 
   // Glücksrad
-  const secWheel = document.createElement("section");
-  secWheel.innerHTML = "<h2>Glücksrad</h2>";
+  const secWheel=document.createElement("section");
+  secWheel.innerHTML="<h2>Glücksrad</h2><div id='wheelPointer'></div>";
   const canvas=document.createElement("canvas");
-  canvas.width=300; canvas.height=300; canvas.id="wheelCanvas";
+  canvas.id="wheelCanvas"; canvas.width=300; canvas.height=300;
   secWheel.appendChild(canvas);
   const btn=document.createElement("button");
   btn.textContent="Drehen!";
@@ -66,17 +67,15 @@ function renderPlayer(content){
 
   // Lottery
   const secLottery=document.createElement("section");
-  secLottery.innerHTML="<h2>Verlosung</h2><div id='countdown'></div><button id='buyTicket'>Los kaufen (10 Coins)</button>";
+  secLottery.innerHTML="<h2>Verlosung</h2><div id='countdown'></div><button id='buyTicket'>Los kaufen (7.5 Coins)</button>";
   content.appendChild(secLottery);
-
   document.getElementById("buyTicket").onclick=()=>buyTicket(currentUser);
   startCountdown();
 }
 
-// ---------------- Admin-Dashboard ----------------
+// -------- Admin-Dashboard --------
 function renderAdmin(content){
-  const users=["Apoyo","Tintin","Cooper","Lilo","Remy"];
-  users.forEach(user=>{
+  players.forEach(user=>{
     const sec=document.createElement("section");
     sec.innerHTML=`<h3>${user} – Coins: <span>${getCoins(user)}</span></h3><ul></ul>`;
     const ul=sec.querySelector("ul");
@@ -87,7 +86,7 @@ function renderAdmin(content){
       chk.type="checkbox"; chk.checked=done[i];
       chk.onchange=()=>{
         done[i]=chk.checked;
-        localStorage.setItem(user+"_tasks", JSON.stringify(done));
+        localStorage.setItem(user+"_tasks",JSON.stringify(done));
         if(chk.checked){
           let c=getCoins(user)+t.reward;
           setCoins(user,c);
@@ -101,20 +100,19 @@ function renderAdmin(content){
     content.appendChild(sec);
   });
 
-  // Lottery-Übersicht
+  // Lottery Übersicht
   const secLottery=document.createElement("section");
   const tickets=JSON.parse(localStorage.getItem("lottery_tickets"));
-  secLottery.innerHTML="<h2>Verlosung</h2><p>Lose insgesamt: "+tickets.length+"/13</p><ul></ul>";
-  const ul=secLottery.querySelector("ul");
+  secLottery.innerHTML="<h2>Verlosung</h2><p>Lose insgesamt: "+tickets.length+"/15</p><ul></ul>";
   tickets.forEach((t,i)=>{
-    let li=document.createElement("li");
-    li.textContent=`${i+1}. ${t.user}`;
-    ul.appendChild(li);
+    const li=document.createElement("li");
+    li.textContent=`Los ${i+1}: ${t.user}`;
+    secLottery.querySelector("ul").appendChild(li);
   });
   content.appendChild(secLottery);
 }
 
-// ---------------- Glücksrad ----------------
+// -------- Glücksrad --------
 function drawWheel(id){
   const canvas=document.getElementById(id);
   const ctx=canvas.getContext("2d");
@@ -144,7 +142,7 @@ function spinWheel(user){
     alert("Nur 1x pro Woche drehen!");
     return;
   }
-  localStorage.setItem(user+"_lastSpin", now);
+  localStorage.setItem(user+"_lastSpin",now);
 
   const canvas=document.getElementById("wheelCanvas");
   const ctx=canvas.getContext("2d");
@@ -171,15 +169,15 @@ function spinWheel(user){
   },30);
 }
 
-// ---------------- Verlosung ----------------
+// -------- Verlosung --------
 function buyTicket(user){
   let coins=getCoins(user);
-  if(coins<10){alert("Nicht genug Coins!");return;}
+  if(coins<7.5){ alert("Nicht genug Coins!"); return; }
   let tickets=JSON.parse(localStorage.getItem("lottery_tickets"));
-  if(tickets.length>=13){alert("Alle Lose verkauft!");return;}
+  if(tickets.length>=15){ alert("Alle Lose ausverkauft!"); return; }
   tickets.push({user});
-  localStorage.setItem("lottery_tickets", JSON.stringify(tickets));
-  setCoins(user,coins-10);
+  localStorage.setItem("lottery_tickets",JSON.stringify(tickets));
+  setCoins(user,coins-7.5);
   document.getElementById("userCoins").textContent=getCoins(user);
   alert("Los gekauft!");
 }
@@ -197,25 +195,27 @@ function startCountdown(){
       const d=Math.floor(diff/86400000);
       const h=Math.floor((diff%86400000)/3600000);
       const m=Math.floor((diff%3600000)/60000);
-      countdown.textContent=`Noch ${d} Tage ${h} Std ${m} Min`;
+      countdown.textContent=`Noch ${d} Tage ${h} Std ${m} Min bis zur Auslosung`;
     }
   },1000);
 }
 
 function drawWinner(){
   let tickets=JSON.parse(localStorage.getItem("lottery_tickets"));
-  if(tickets.length>0){
-    const winner=tickets[Math.floor(Math.random()*tickets.length)].user;
+  const winningTicket=Math.floor(Math.random()*15); // 15 Lose
+  let winner=null;
+  if(winningTicket<tickets.length){
+    winner=tickets[winningTicket].user;
     let coins=getCoins(winner)+75;
     setCoins(winner,coins);
-    alert("Verlosung vorbei! Gewinner: "+winner+" (+75 Coins)");
+    alert("Gewinner: "+winner+" (+75 Coins)");
   } else {
-    alert("Verlosung vorbei! Keine Lose gekauft.");
+    alert("Ein nicht verkauftes Los hat gewonnen. Niemand erhält 75 Coins.");
   }
-  // neue Runde
-  const end = Date.now() + 14*24*3600*1000;
-  localStorage.setItem("lottery_end", end);
-  localStorage.setItem("lottery_tickets", JSON.stringify([]));
+  // Neue Runde
+  const end=Date.now()+14*24*3600*1000;
+  localStorage.setItem("lottery_end",end);
+  localStorage.setItem("lottery_tickets",JSON.stringify([]));
   render();
 }
 
