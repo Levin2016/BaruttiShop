@@ -1,53 +1,20 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>Barutti Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Barutti Dashboard</h1>
-        <div id="userInfo">Eingeloggt als: <span id="userName"></span> | Coins: <span id="userCoins"></span></div>
-    </header>
+  <header>
+    <div id="leftInfo">Eingeloggt als: <span id="userName"></span></div>
+    <div id="rightInfo">Coins: <span id="userCoins"></span></div>
+  </header>
 
-    <main>
-        <!-- Aufgaben -->
-        <section id="tasks">
-            <h2>Aufgaben</h2>
-            <ul id="tasksList"></ul>
-        </section>
+  <main id="content">
+    <!-- Inhalte werden dynamisch mit JS geladen -->
+  </main>
 
-        <!-- Glücksrad -->
-        <section id="wheel">
-            <h2>Glücksrad</h2>
-            <canvas id="spinWheel" width="300" height="300"></canvas>
-            <button onclick="spinWheel()">Drehen!</button>
-        </section>
-
-        <!-- Verlosung -->
-        <section id="lottery">
-            <h2>Verlosung</h2>
-            <div id="lotteryCountdown">Countdown: </div>
-            <button onclick="buyTicket()">Los kaufen (10 Coins)</button>
-            <div id="lotteryTickets">Verfügbare Lose: 13</div>
-        </section>
-
-        <!-- Shop -->
-        <section id="shop">
-            <h2>Shop</h2>
-            <ul>
-                <li>Kuscheltier - 5 Coins
-                    <button onclick="addToCart('Kuscheltier', 5)">In den Warenkorb</button>
-                </li>
-                <li>Aufkleber - 2 Coins
-                    <button onclick="addToCart('Aufkleber', 2)">In den Warenkorb</button>
-                </li>
-            </ul>
-            <button onclick="checkout()">Zur Kasse</button>
-        </section>
-    </main>
-
-    <script src="dashboard.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>
