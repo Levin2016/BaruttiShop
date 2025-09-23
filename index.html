@@ -6,20 +6,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="topbar">
+        <label for="profileSelect"><b>Profil wählen:</b></label>
+        <select id="profileSelect" onchange="changeProfile()">
+            <option value="Lilo">Lilo</option>
+            <option value="Cooper">Cooper</option>
+            <option value="Remy">Remy</option>
+            <option value="Tintin">Tintin</option>
+            <option value="Apoyo">Apoyo</option>
+        </select>
+        <div id="profileCoins"></div>
+    </div>
     <h1>Willkommen im BaruttiShop!</h1>
-    <label for="profileSelect"><b>Profil wählen:</b></label>
-    <select id="profileSelect" onchange="changeProfile()">
-        <option value="Lilo">Lilo</option>
-        <option value="Cooper">Cooper</option>
-        <option value="Remy">Remy</option>
-        <option value="Tintin">Tintin</option>
-        <option value="Apoyo">Apoyo</option>
-    </select>
-    <div id="profileCoins"></div>
     <div id="products"></div>
     <h2>Warenkorb</h2>
     <ul id="cart"></ul>
     <button onclick="checkout()">Mit BaruttiCoins zahlen</button>
+    <h2>Letzte Bestellung (24h sichtbar)</h2>
+    <ul id="orderHistory"></ul>
     <script src="shop.js"></script>
 </body>
 </html>
