@@ -1,37 +1,16 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Login - Barutti Coins</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Mein Online Shop</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="login-container">
-    <h1>Willkommen bei Barutti Coins!</h1>
-    <p>Wähle dein Profil:</p>
-    <div class="users">
-      <button onclick="login('Barutti')">Barutti</button>
-      <button onclick="login('Apoyo')">Apoyo</button>
-      <button onclick="login('Tintin')">Tintin</button>
-      <button onclick="login('Cooper')">Cooper</button>
-      <button onclick="login('Lilo')">Lilo</button>
-      <button onclick="login('Remy')">Remy</button>
-    </div>
-  </div>
-
-  <script>
-    function login(user) {
-      localStorage.setItem("currentUser", user);
-
-      const allUsers = ["Apoyo","Tintin","Cooper","Lilo","Remy"];
-      allUsers.forEach(u=>{
-        if(!localStorage.getItem(u+"_coins")) localStorage.setItem(u+"_coins",0);
-        if(!localStorage.getItem(u+"_tasks")) localStorage.setItem(u+"_tasks", JSON.stringify([false,false,false,false]));
-        if(!localStorage.getItem(u+"_lastSpin")) localStorage.setItem(u+"_lastSpin",0);
-      });
-
-      window.location.href="dashboard.html";
-    }
-  </script>
+    <h1>Willkommen im Online Shop!</h1>
+    <div id="products"></div>
+    <h2>Warenkorb</h2>
+    <ul id="cart"></ul>
+    <button onclick="checkout()">Zur Kasse</button>
+    <script src="shop.js"></script>
 </body>
 </html>
