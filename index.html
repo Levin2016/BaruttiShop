@@ -2,15 +2,24 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Mein Online Shop</title>
+    <title>BaruttiShop</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Willkommen im Online Shop!</h1>
+    <h1>Willkommen im BaruttiShop!</h1>
+    <label for="profileSelect"><b>Profil wählen:</b></label>
+    <select id="profileSelect" onchange="changeProfile()">
+        <option value="Lilo">Lilo</option>
+        <option value="Cooper">Cooper</option>
+        <option value="Remy">Remy</option>
+        <option value="Tintin">Tintin</option>
+        <option value="Apoyo">Apoyo</option>
+    </select>
+    <div id="profileCoins"></div>
     <div id="products"></div>
     <h2>Warenkorb</h2>
     <ul id="cart"></ul>
-    <button onclick="checkout()">Zur Kasse</button>
+    <button onclick="checkout()">Mit BaruttiCoins zahlen</button>
     <script src="shop.js"></script>
 </body>
 </html>
